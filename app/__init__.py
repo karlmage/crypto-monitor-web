@@ -1,10 +1,7 @@
-import os
 from flask import Flask
-from dotenv import load_dotenv
 from .config import DevelopmentConfig
 
 def create_app(config_name = "development"):
-    load_dotenv()
 
     app = Flask(__name__)
 

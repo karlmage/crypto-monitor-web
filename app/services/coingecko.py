@@ -5,11 +5,11 @@ from dotenv import load_dotenv
 
 load_dotenv()
 api_key = os.getenv("COINGECKO_API_KEY")
+headers = {"x-cg-demo-api-key": api_key}
 
-url = "https://pro-api.coingecko.com/api/v3/ping"
+def get_price(coin_id, currency = "usd"):
+    url = f"https://api.coingecko.com/api/v3/simple/price?vs_currencies={currency}&ids={coin_id}"
+    response = requests.get(url, headers=headers)
+    return response.json()[coin_id][currency]
 
-headers = {"x-cg-pro-api-key": f"{api_key}"}
-
-response = requests.get(url, headers=headers)
-
-print(response.json())
+print(get_price(coin_id = "bitcoin", currency = "usd"))
