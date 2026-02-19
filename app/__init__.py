@@ -1,7 +1,11 @@
+import os
 from flask import Flask
+from dotenv import load_dotenv
 from .config import DevelopmentConfig
 
 def create_app(config_name = "development"):
+    load_dotenv()
+
     app = Flask(__name__)
 
     configs = {
@@ -9,6 +13,9 @@ def create_app(config_name = "development"):
     }
 
     app.config.from_object(configs[config_name])
+
+    if not app.config.get("COINGECKO_API_KEY"):
+        raise Exception("COINGECKO_API_KEY not set")
 
     from .routes import main
     app.register_blueprint(main, url_prefix="")
