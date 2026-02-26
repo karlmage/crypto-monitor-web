@@ -1,8 +1,14 @@
 from flask import Flask
 from .config import DevelopmentConfig
 from .services.coingecko import CoingeckoClient
+from dotenv import load_dotenv
+from pathlib import Path
+import os
 
 def create_app(config_name = "development"):
+
+    env_path = Path(__file__).resolve().parent.parent / ".env"
+    load_dotenv(dotenv_path=env_path)
 
     app = Flask(__name__)
 
@@ -11,6 +17,7 @@ def create_app(config_name = "development"):
     }
 
     app.config.from_object(configs[config_name])
+    app.config["COINGECKO_API_KEY"] = os.getenv("COINGECKO_API_KEY")
 
     if not app.config.get("COINGECKO_API_KEY"):
         raise Exception("COINGECKO_API_KEY not set")
