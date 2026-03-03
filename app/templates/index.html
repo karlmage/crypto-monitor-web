@@ -12,21 +12,12 @@
       <input id="coinId" value="bitcoin" />
     </label>
     <button id="loadButton">Load price</button>
+    <p id="out"></p>
+    <div><canvas id="priceGraph" width="600" height="300"></canvas></div>
 
-    <pre id="out"></pre>
-
-    <script>
-      async function loadPrice(){
-        const coinId = document.getElementById("coinId").value.trim();
-        const res = await fetch(`/api/${encodeURIComponent(coinId)}/price`);
-        const data = await res.json();
-        const price = await data.price
-        document.getElementById("out").textContent = JSON.stringify(price, null, 2);
-      }
-
-      document.getElementById("loadButton").addEventListener("click", loadPrice);
-      loadPrice();
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ url_for('static', filename='js/loadPrice.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/loadGraph.js') }}"></script>
 
   </body>
 </html>
