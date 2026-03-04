@@ -1,5 +1,7 @@
 #Coingecko API: https://docs.coingecko.com/
 import requests
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 class CoingeckoError(Exception):
     pass
@@ -12,6 +14,13 @@ class CoingeckoNotFound(CoingeckoError):
 
 class CoingeckoClient:
     BASE_URL = "https://api.coingecko.com/api/v3/"
+
+    def _calculate_range(self) -> dict:
+
+        now = datetime.now().date()
+        month_ago = now - relativedelta(months=1)
+
+        return {"from": month_ago.isoformat(), "to": now.isoformat()}
 
     def __init__(self, api_key: str | None, timeout: int = 5):
         self.timeout = timeout
@@ -46,3 +55,36 @@ class CoingeckoClient:
             raise CoingeckoNotFound(f"Price not found for coin_id={coin_id}")
 
         return float(data[coin_id][currency])
+
+    def get_month_data(self, coin_id: str, currency: str = "usd") -> list:
+
+        url = f"{self.BASE_URL}coins/{coin_id}/market_chart/range"
+
+        range_params = self._calculate_range()
+        params = {"vs_currencies": currency, "ids": coin_id, "interval": "daily"}.update(range_params)
+
+        try:
+            response = self.session.get(url, params=params, headers=self.headers, timeout=self.timeout)
+        except requests.RequestException as e:
+            raise CoingeckoError(f"Network error: {e}") from e
+
+        if response.status_code == 429:
+            raise CoingeckoRateLimit("Rate limit exceeded")
+        if response.status_code >= 500:
+            raise CoingeckoError(f"Upstream error: {response.status_code}")
+
+        try:
+            response.raise_for_status()
+            data = response.json()
+        except ValueError as e:
+            raise CoingeckoError("Invalid JSON from Coingecko") from e
+        except requests.HTTPError as e:
+            raise CoingeckoError(f"HTTP error: {response.status_code}") from e
+        if coin_id not in data or currency not in data[coin_id]:
+            raise CoingeckoNotFound(f"Data not found for coin_id={coin_id}")
+
+        month_data = []
+        for i in data["prices"]:
+            month_data.append(i[1])
+
+        return month_data
