@@ -10,7 +10,6 @@ def index():
 
 @main.route('api/<coin_id>/price')
 def price(coin_id):
-    # return f"{coin_id}: {get_price(coin_id=coin_id)}"
     client = current_app.extensions["coingecko"]
     currency = current_app.config.get("DEFAULT_CURRENCY", "usd")
 

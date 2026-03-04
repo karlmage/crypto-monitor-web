@@ -46,4 +46,3 @@ class CoingeckoClient:
             raise CoingeckoNotFound(f"Price not found for coin_id={coin_id}")
 
         return float(data[coin_id][currency])
-
