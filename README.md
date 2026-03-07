@@ -25,11 +25,11 @@ I've completed all the goals I set for myself here and learnt little of JavaScri
 Also Flask framework was completely new to me but I'm not going to settle on it for long.
 I finish this project on 07.03.2026 because I want to remake it using Fast API
 
-##Download (Conda)
+## Download (Conda)
 Download all the files from the repo. Then in terminal enter crypto_monitor_web directory and execute these commands:
-<q>
+<\n><\n>
 conda env create -f environment.yml
 conda activate crypto
 pip install -r requirements.txt
-</q>
+<\n><\n>
 After executing the commands, all dependencies will be installed
