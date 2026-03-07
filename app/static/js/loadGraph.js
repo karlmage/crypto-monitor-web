@@ -1,8 +1,20 @@
+let priceChart = null;
+
 export async function loadGraph(coinId) {
 
   try {
       const res = await fetch(`/api/${encodeURIComponent(coinId)}/price_graph`);
       const json_data = await res.json();
+
+      const labels = json_data.day;
+      const prices = json_data.price;
+
+      if (priceChart) {
+          priceChart.data.labels = labels;
+          priceChart.data.datasets[0].data = prices;
+          priceChart.update();
+          return;
+      }
 
       const data = {
         labels: json_data.day,
@@ -18,11 +30,11 @@ export async function loadGraph(coinId) {
         type: 'line',
         data: data,
         options:{
-          responsive: true
+          responsive: false
         }
       };
 
-      new Chart(document.getElementById("priceGraph"), config)
+      priceChart = new Chart(document.getElementById("priceGraph"), config)
 
   } catch (err){
         console.error(err)
