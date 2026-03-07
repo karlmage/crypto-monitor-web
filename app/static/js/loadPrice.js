@@ -1,5 +1,4 @@
-async function loadPrice() {
-    const coinId = document.getElementById("coinId").value.trim();
+export async function loadPrice(coinId) {
 
     try {
         const res = await fetch(`/api/${encodeURIComponent(coinId)}/price`);
@@ -11,6 +10,3 @@ async function loadPrice() {
     }
 
 }
-
-document.getElementById("loadButton").addEventListener("click", loadPrice);
-loadPrice();

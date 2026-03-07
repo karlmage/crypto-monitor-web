@@ -1,26 +1,30 @@
-import Utils from'./utils.js'
+export async function loadGraph(coinId) {
 
-(async function() {
-  const labels = Utils.days; //Later I'll make it take real-time date
+  try {
+      const res = await fetch(`/api/${encodeURIComponent(coinId)}/price_graph`);
+      const json_data = await res.json();
 
-  const data = {
-    labels: labels,
-    datasets: [{
-      label: 'Price',
-      data: [65, 59, 80, 81, 56, 55, 40], //Later I'll make it take historical data
-      fill: true,
-      tension: 0.1
-    }]
-  };
+      const data = {
+        labels: json_data.day,
+        datasets: [{
+          label: 'Price',
+          data: json_data.price,
+          fill: true,
+          tension: 0.1
+        }]
+      };
 
-  const config = {
-    type: 'line',
-    data: data,
-    options:{
-      responsive: true
-    }
-  };
+      const config = {
+        type: 'line',
+        data: data,
+        options:{
+          responsive: true
+        }
+      };
 
-  new Chart(document.getElementById("priceGraph"), config)
+      new Chart(document.getElementById("priceGraph"), config)
+
+  } catch (err){
+        console.error(err)
+  }
 }
-)();

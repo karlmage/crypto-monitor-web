@@ -16,16 +16,27 @@ class CoingeckoClient:
     BASE_URL = "https://api.coingecko.com/api/v3/"
 
     def _calculate_range(self) -> dict:
-
-        now = datetime.now().date()
+        now = datetime.now()
         month_ago = now - relativedelta(months=1)
 
-        return {"from": month_ago.isoformat(), "to": now.isoformat()}
+        return {"from": month_ago.date().isoformat(), "to": now.date().isoformat()}
+
+    def _time_span(self) -> list:
+        now = datetime.now().date()
+        current = now - relativedelta(months=1)
+        time_span = []
+
+        while current <= now:
+            time_span.append(current.isoformat())
+            current += relativedelta(days=1)
+
+        return time_span
 
     def __init__(self, api_key: str | None, timeout: int = 5):
         self.timeout = timeout
         self.session = requests.Session()
         self.headers = {}
+
         if api_key:
             self.headers["x-cg-demo-api-key"] = api_key
 
@@ -56,18 +67,16 @@ class CoingeckoClient:
 
         return float(data[coin_id][currency])
 
-    def get_month_data(self, coin_id: str, currency: str = "usd") -> list:
-
+    def get_month_data(self, coin_id: str, currency: str = "usd") -> dict:
         url = f"{self.BASE_URL}coins/{coin_id}/market_chart/range"
 
         range_params = self._calculate_range()
-        params = {"vs_currencies": currency, "ids": coin_id, "interval": "daily"}.update(range_params)
+        params = {"vs_currency": currency, **range_params}
 
         try:
             response = self.session.get(url, params=params, headers=self.headers, timeout=self.timeout)
         except requests.RequestException as e:
             raise CoingeckoError(f"Network error: {e}") from e
-
         if response.status_code == 429:
             raise CoingeckoRateLimit("Rate limit exceeded")
         if response.status_code >= 500:
@@ -80,11 +89,13 @@ class CoingeckoClient:
             raise CoingeckoError("Invalid JSON from Coingecko") from e
         except requests.HTTPError as e:
             raise CoingeckoError(f"HTTP error: {response.status_code}") from e
-        if coin_id not in data or currency not in data[coin_id]:
+        if not data.get("prices"):
             raise CoingeckoNotFound(f"Data not found for coin_id={coin_id}")
 
-        month_data = []
+        prices = []
         for i in data["prices"]:
-            month_data.append(i[1])
+            prices.append(i[1])
 
-        return month_data
+        time_span = self._time_span()
+
+        return {"price": prices, "day": time_span}

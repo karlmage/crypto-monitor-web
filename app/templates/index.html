@@ -13,11 +13,10 @@
     </label>
     <button id="loadButton">Load price</button>
     <p id="out"></p>
-    <div><canvas id="priceGraph" width="600" height="300"></canvas></div>
+    <div><canvas id="priceGraph" width="300" height="150"></canvas></div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="{{ url_for('static', filename='js/loadPrice.js') }}"></script>
-    <script type="module" src="{{ url_for('static', filename='js/loadGraph.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
 
   </body>
 </html>

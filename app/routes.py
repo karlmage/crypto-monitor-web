@@ -23,3 +23,21 @@ def price(coin_id):
     except CoingeckoError as e:
         current_app.logger.exception("Coingecko error: %s", e)
         return jsonify({"error": "Upstream error"}), 503
+
+@main.route('api/<coin_id>/price_graph')
+def graph(coin_id):
+    client = current_app.extensions["coingecko"]
+    currency = current_app.config.get("DEFAULT_CURRENCY", "usd")
+
+    try:
+        price_history = client.get_month_data(coin_id=coin_id, currency=currency)
+        return jsonify({"coin_id": coin_id, "currency": currency,
+                        "price": price_history["price"], "day": price_history["day"]})
+    except CoingeckoNotFound:
+        return jsonify({"error": "Coingecko not found"}), 404
+    except CoingeckoRateLimit:
+        return jsonify({"error": "Coingecko rate limit exceeded"}), 429
+    except CoingeckoError as e:
+        current_app.logger.exception("Coingecko error: %s", e)
+        return jsonify({"error": "Upstream error"}), 503
+
