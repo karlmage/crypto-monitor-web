@@ -6,9 +6,9 @@
 - refresh my front-end skills
 
 ## Stack
-- Python: <i>Flask</i>
-- JavaScript: <i>Chart.js</i>
-- Coingecko API: <i>Crypto currency data</i>
+- Python: _Flask_
+- JavaScript: _Chart.js_
+- Coingecko API: _Crypto currency data_
 
 ## Resources
 - Requests: HTTP for Humans| https://docs.python-requests.org/en/latest/
@@ -27,9 +27,9 @@ I finish this project on 07.03.2026 because I want to remake it using Fast API
 
 ## Download (Conda)
 Download all the files from the repo. Then in terminal enter crypto_monitor_web directory and execute these commands:
-<\n><\n>
-conda env create -f environment.yml
-conda activate crypto
-pip install -r requirements.txt
-<\n><\n>
+  
+>conda env create -f environment.yml
+>conda activate crypto
+>pip install -r requirements.txt
+  
 After executing the commands, all dependencies will be installed
