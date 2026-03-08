@@ -30,6 +30,6 @@ Download all the files from the repo. Then in terminal enter crypto_monitor_web 
 <br/>
 >conda env create -f environment.yml\
 >conda activate crypto\
->pip install -r requirements.txt\
+>pip install -r requirements.txt
 <br/>
 After executing the commands, all dependencies will be installed
