@@ -27,9 +27,9 @@ I finish this project on 07.03.2026 because I want to remake it using Fast API
 
 ## Download (Conda)
 Download all the files from the repo. Then in terminal enter crypto_monitor_web directory and execute these commands:
-  
->conda env create -f environment.yml
->conda activate crypto
->pip install -r requirements.txt
-  
+    
+>conda env create -f environment.yml. 
+>conda activate crypto. 
+>pip install -r requirements.txt. 
+    
 After executing the commands, all dependencies will be installed
